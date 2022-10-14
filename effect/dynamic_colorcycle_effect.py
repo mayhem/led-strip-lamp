@@ -58,7 +58,7 @@ class DynamicColorCycleEffect(effect.Effect):
     def print_palette(self, palette):
 
         for d, color in palette:
-            print("%.4f (%d, %d, %d)" % (d, color[0], color[1], color[2]))
+            print(("%.4f (%d, %d, %d)" % (d, color[0], color[1], color[2])))
         print()
 
 

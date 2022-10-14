@@ -37,7 +37,7 @@ class TestEffect(effect.Effect):
 
     def print_palette(self, palette):
         for i, pal in enumerate(palette):
-            print("%d %.4f (%d, %d, %d)" % (i, pal[0], pal[1][0], pal[1][1], pal[1][2]))
+            print(("%d %.4f (%d, %d, %d)" % (i, pal[0], pal[1][0], pal[1][1], pal[1][2])))
         print()
 
 
