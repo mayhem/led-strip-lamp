@@ -1,3 +1,4 @@
+from time import sleep
 from math import fmod
 from random import random
 import palette
@@ -19,8 +20,10 @@ class SolidEffect(effect.Effect):
         self.color = self.palette.color(self.hue)
 
     def set_color(self, color):
+        print("solid effect set color: ", color)
         self.color = color
 
     def loop(self):
         self.led_art.set_color(self.color)
         self.led_art.show()
+        sleep(.1)

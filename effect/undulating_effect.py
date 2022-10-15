@@ -5,7 +5,7 @@ import config
 import gradient
 import palette
 import effect
-from lips import CHANNEL_0, CHANNEL_1, CHANNEL_BOTH
+from lamp import CHANNEL_0, CHANNEL_1, CHANNEL_BOTH
 
 
 class UndulatingEffect(effect.Effect):

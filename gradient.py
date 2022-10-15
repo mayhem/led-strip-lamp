@@ -1,7 +1,6 @@
 from colorsys import hsv_to_rgb
 from math import fabs, fmod
 import os
-from neopixel import Color
 
 class Gradient(object):
 
@@ -61,11 +60,11 @@ class Gradient(object):
         assert False
 
 
-    def render(self, led_art, channel):
+    def render(self, led_art):
 
         for led in range(self.num_leds):
             offset = (float(led) / float(self.num_leds - 1))
             offset = fmod(offset + self.led_offset / self.led_scale, 1.0)
 
             color = self.get_color_by_offset(offset)
-            led_art.set_led_color(led, color, channel)
+            led_art.set_led_color(led, color)

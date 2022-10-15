@@ -6,7 +6,6 @@ import config
 import gradient
 import palette
 import effect
-from lips import CHANNEL_0, CHANNEL_1, CHANNEL_BOTH
 
 DEFAULT_COLORS = [(255, 0, 0), (210, 70, 0)]
 
@@ -44,7 +43,7 @@ class ChillBedTimeEffect(effect.Effect):
               (1.0, self.colors[0])
         ]
         g = gradient.Gradient(p, config.NUM_LEDS)
-        g.render(self.led_art, CHANNEL_BOTH)
+        g.render(self.led_art)
 
         self.led_art.show()
 

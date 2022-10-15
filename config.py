@@ -1,3 +1,4 @@
+
 # Hardware configuratuion
 CH0_LED_PIN = 21
 CH1_LED_PIN = 13
