@@ -16,7 +16,9 @@ from rpi_ws281x import PixelStrip, Color
 
 import config
 
-TOPIC = config.NAME + "/set"
+TOPIC_SET = config.NAME + "/set"
+TOPIC_EFFECT = config.NAME + "/effect"
+TOPIC_BRIGHTNESS = config.NAME + "/brightness"
 
 INITIAL_BRIGHTNESS = 30
 
@@ -81,8 +83,17 @@ class LEDStripLamp(object):
         self.state = False
         self.clear()
 
+    def brightness_up(self):
+        self.brightness = (min(100, self.brightness + 10) // 10) * 10
+        for strip in self.strips:
+            strip.setBrightness(self.brightness)
+
+    def brightness_down(self):
+        self.brightness = max(5, self.brightness - 10)
+        for strip in self.strips:
+            strip.setBrightness(self.brightness)
+
     def set_effect(self, effect_name, brightness=None):
-        print("effect: %s" % effect_name)
         for i, effect in enumerate(self.effect_list):
             if effect.name == effect_name:
                 self.turn_off()
@@ -99,7 +110,6 @@ class LEDStripLamp(object):
     def set_color_effect(self, color, brightness=None):
         for i, effect in enumerate(self.effect_list):
             if effect.name == "solid":
-                print("Found sold effect, setting")
                 self.turn_off()
                 self.current_effect = effect 
                 self.current_effect.setup()
@@ -132,14 +142,12 @@ class LEDStripLamp(object):
 
     def nudge_effect(self):
         if self.brightness and self.current_effect:
-            print("nudge effect")
             self.current_effect.nudge()
 
     def startup(self):
 
         colors = ( (128, 0, 128), (128, 30, 0) )
         for p in range(4):
-            print("clear")
             self.clear(colors[0])
             sleep(.25)
             self.clear(colors[1])
@@ -159,7 +167,7 @@ class LEDStripLamp(object):
     def _handle_message(self, mqttc, msg):
 
         payload = str(msg.payload, 'utf-8')
-        if msg.topic == TOPIC:
+        if msg.topic == TOPIC_SET:
             try:
                 js = json.loads(str(msg.payload, 'utf-8'))
                 state = js["state"]
@@ -186,6 +194,18 @@ class LEDStripLamp(object):
                 self.set_color_effect(rgb, brightness)
 
             return
+
+        if msg.topic == TOPIC_EFFECT:
+            if payload == "next":
+                self.next_effect()
+            if payload == "prev":
+                self.previous_effect()
+
+        if msg.topic == TOPIC_BRIGHTNESS:
+            if payload == "up":
+                self.brightness_up()
+            if payload == "down":
+                self.brightness_down()
         
 
     def setup(self):
@@ -202,7 +222,9 @@ class LEDStripLamp(object):
             print("adding effect %s" % effect.name)
             effect_name_list.append(effect.name)
 
-        self.mqttc.subscribe(TOPIC)
+        self.mqttc.subscribe(TOPIC_SET)
+        self.mqttc.subscribe(TOPIC_EFFECT)
+        self.mqttc.subscribe(TOPIC_BRIGHTNESS)
 
 
     def loop(self):
